@@ -1,0 +1,17 @@
+//
+//  UIViewController+showAlert.swift
+//  iOSDeveloperChallenge
+//
+//  Created by Muhammed Emin Aydın on 18.06.2022.
+//
+
+import Foundation
+import UIKit
+
+extension UIViewController {
+    func showAlert( _ message: String ) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction( UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}

@@ -32,9 +32,15 @@ class HomeViewModel {
     func getCellViewModel( at indexPath: IndexPath ) -> CellViewModel {
         return cellViewModels[indexPath.row]
     }
+    
+    func filterData() {
+        self.createCell(datas: self.bankDataList)
+        self.reloadTableView?()
+    }
 
     
     func getData() {
+        self.bankDataList.removeAll()
         self.showActivityIndicator?()
 
         BankDataService.shared.getBankData { response in

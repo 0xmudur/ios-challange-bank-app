@@ -26,8 +26,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchController.searchResultsUpdater = self
-        navigationItem.searchController = searchController
+        setupSearchBar()
     }
     
     private func checkNetworkReachability() {
@@ -54,6 +53,11 @@ class HomeViewController: UIViewController {
             print("Unable to start notifier")
         }
         
+    }
+    private func setupSearchBar() {
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
     }
     
     private func setupViewModel() {
@@ -90,8 +94,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.register(BankTableViewCell.self, forCellReuseIdentifier: BankTableViewCell.identifier)
         tableView.dataSource = self
         tableView.delegate = self
-        //        tableView.alwaysBounceVertical = false
-        //        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.addConstraintsToFillView(view)
     }
     
@@ -117,20 +119,25 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         return 40
     }
     
-    
-    
 }
 
-extension HomeViewController: UISearchResultsUpdating {
+extension HomeViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
         
         let result = viewModel.bankDataList.filter({ searchText.contains( $0.dcBANKASUBE )})
         
-        viewModel.bankDataList = result
-        
-        viewModel.reloadTableView
+        if !result.isEmpty {
+            print("result: \(result)")
+            viewModel.bankDataList = result
+            viewModel.filterData()
+        }
     }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        viewModel.getData()
+    }
+    
 }
 
